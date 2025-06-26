@@ -3,6 +3,7 @@ package main
 import (
 	"github/arthur-psp/wine-smart/internal/core/usecase"
 	"github/arthur-psp/wine-smart/internal/infra/controller"
+	"github/arthur-psp/wine-smart/internal/infra/device"
 	"github/arthur-psp/wine-smart/internal/infra/repository"
 	"log"
 	"net/http"
@@ -55,8 +56,15 @@ func main() {
 	leituraUseCase := usecase.NewLeituraUseCase(leituraRepo)
 	leituraController := controller.NewLeituraController(leituraUseCase)
 
+	//simulador
+	simulador := device.NewSimulador(leituraUseCase)
+	simulador.Start()
+
 	http.HandleFunc("/leitura", withCORS(leituraController.Seta))
 	http.HandleFunc("/leituras", withCORS(leituraController.Lista))
+	http.HandleFunc("/regular-temperatura", withCORS(simulador.RegularTemperatura))
+	http.HandleFunc("/gera-temperatura", withCORS(simulador.Seta))
+	
 
 	log.Println("Servidor rodando na porta 8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -46,7 +46,7 @@ func (controller *leituraHandler) Seta(response http.ResponseWriter, request *ht
 func (controller *leituraHandler) Lista(response http.ResponseWriter, request *http.Request) {
 	leituras, err := controller.leituraUsecase.ListarLeituras()
 	if err != nil {
-		http.Error(response, "erro ao listar leituras: ", http.StatusInternalServerError)
+		http.Error(response, "erro ao listar leituras: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	response.WriteHeader(http.StatusOK)

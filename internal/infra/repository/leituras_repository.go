@@ -24,9 +24,9 @@ func NewLeituraRepository(db *sqlx.DB) LeituraRepository {
 
 
 func (leituraRepository *leituraRepository) SetarNovaTemperatura(l *domain.Leituras) error {
-	query := `INSERT INTO leituras (temperatura, ligado, timestamp) VALUES ($1, $2, $3) RETURNING id_temperatura`
-	fmt.Println("tentando inserir: ", l.Temperatura, l.Ligado, l.Timestamp)
-	err := leituraRepository.DB.QueryRow(query, l.Temperatura, l.Ligado, l.Timestamp).Scan(&l.ID)
+	query := `INSERT INTO leituras (temperatura, ligado, timestamp, tipo_de_vinho) VALUES ($1, $2, $3, $4) RETURNING id_temperatura`
+	fmt.Println("tentando inserir: ", l.Temperatura, l.Ligado, l.Timestamp, l.TipoVinho)
+	err := leituraRepository.DB.QueryRow(query, l.Temperatura, l.Ligado, l.Timestamp, l.TipoVinho).Scan(&l.ID)
 	if err != nil {
 		return err
 	}
@@ -55,6 +55,7 @@ func (leituraRepository *leituraRepository) ListaLeituras() ([]domain.Leituras, 
 			&leitura.Temperatura,
 			&leitura.Ligado,
 			&leitura.Timestamp,
+			&leitura.TipoVinho,
 		)
 		if err != nil {
 			return nil, err
